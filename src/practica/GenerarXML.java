@@ -8,7 +8,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -30,12 +29,12 @@ public class GenerarXML {
 		// TODO Auto-generated method stub
 		int opcion = 0;
 		do {
-
+			
 			File file = new File(archivo);
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 			org.w3c.dom.Document doc = dBuilder.parse(file);
-
+			
 			System.out.println("1. Crear curso\n2. Modificar curso\n3. Salir");
 			opcion = validacion();
 			switch (opcion) {
