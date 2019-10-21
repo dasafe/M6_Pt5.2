@@ -24,7 +24,7 @@
 			<alumne>RODRIGUEZ, Alex</alumne>
 			
 			<alumne>SANCHEZ, Eric</alumne>
-		</alumnes>
+		<alumne>DanielVR</alumne></alumnes>
 		<moduls>
 			<modul id="M06">
 				<titol>Acces a dades</titol>
@@ -61,7 +61,7 @@
 			<alumne>SANCHEZ, Eduard</alumne>
 			<alumne>TROLLANO, Raul</alumne>
 			<alumne>VAZQUEZ, Albert</alumne>
-		</alumnes>
+		<alumne>David SalasDavid Salas</alumne><alumne>DanielVR</alumne></alumnes>
 		<moduls>
 			<modul id="M01">
 				<titol>Sistemes informatics</titol>

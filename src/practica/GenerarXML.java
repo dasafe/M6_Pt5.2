@@ -8,6 +8,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -25,20 +26,26 @@ public class GenerarXML {
 	private static final String archivo = "cursosexemple.xml";
 	static Scanner reader = new Scanner(System.in);
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException {
 		// TODO Auto-generated method stub
 		int opcion = 0;
 		do {
+
+			File file = new File(archivo);
+			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+			org.w3c.dom.Document doc = dBuilder.parse(file);
+
 			System.out.println("1. Crear curso\n2. Modificar curso\n3. Salir");
 			opcion = validacion();
 			switch (opcion) {
 			case 1:
-				crearXML();
+				crearXML(doc);
 				break;
 			case 2:
 				try {
-					modificarXML();
-				} catch (SAXException | IOException | ParserConfigurationException | TransformerException e) {
+					modificarXML(doc);
+				} catch (TransformerException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
@@ -55,13 +62,8 @@ public class GenerarXML {
 
 	}
 
-	private static void modificarXML()
-			throws SAXException, IOException, ParserConfigurationException, TransformerException {
+	private static void modificarXML(Document doc) throws TransformerException {
 		// TODO Auto-generated method stub
-		File file = new File(archivo);
-		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-		org.w3c.dom.Document doc = dBuilder.parse(file);
 
 		System.out.println("\n1. Añadir alumno\n2. Eliminar alumno\n3. Salir");
 		String nombreAlumno = null;
@@ -73,27 +75,42 @@ public class GenerarXML {
 		}
 		switch (opcion) {
 		case 1:
-			System.out.println("En proceso");
-			break;
-		case 2:
-			NodeList nList = doc.getElementsByTagName("alumne");
+			NodeList nList = doc.getElementsByTagName("alumnes");
 			for (int i = 0; i < nList.getLength(); i++) {
+				Element alumne = doc.createElement("alumne");
 				Node nNode = nList.item(i);
 				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 					Element eElement = (Element) nNode;
-					String pName = eElement.getTextContent();
-					if (pName.contains(nombreAlumno)) {
-						nNode.getParentNode().removeChild(nNode);
-						i = i - 1;
-					}
+					eElement.appendChild(alumne);
+					alumne.appendChild(doc.createTextNode(nombreAlumno));
 				}
 			}
-			System.out.println("Alumno eliminado");
 			TransformerFactory transformerFactory = TransformerFactory.newInstance();
 			Transformer transformer = transformerFactory.newTransformer();
 			DOMSource source = new DOMSource(doc);
 			StreamResult result = new StreamResult(new File(archivo));
 			transformer.transform(source, result);
+			System.out.println("Alumno añadido");
+			break;
+		case 2:
+			NodeList nList2 = doc.getElementsByTagName("alumne");
+			for (int i = 0; i < nList2.getLength(); i++) {
+				Node nNode2 = nList2.item(i);
+				if (nNode2.getNodeType() == Node.ELEMENT_NODE) {
+					Element eElement = (Element) nNode2;
+					String pName = eElement.getTextContent();
+					if (pName.contains(nombreAlumno)) {
+						nNode2.getParentNode().removeChild(nNode2);
+						i = i - 1;
+					}
+				}
+			}
+			TransformerFactory transformerFactory2 = TransformerFactory.newInstance();
+			Transformer transformer2 = transformerFactory2.newTransformer();
+			DOMSource source2 = new DOMSource(doc);
+			StreamResult result2 = new StreamResult(new File(archivo));
+			transformer2.transform(source2, result2);
+			System.out.println("Alumno eliminado");
 			break;
 		case 3:
 			break;
@@ -105,7 +122,7 @@ public class GenerarXML {
 
 	}
 
-	private static void crearXML() {
+	private static void crearXML(Document doc2) {
 		// TODO Auto-generated method stub
 		Document doc = null;
 		try {
